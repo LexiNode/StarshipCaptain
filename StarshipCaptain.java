@@ -1,4 +1,6 @@
+import java.util.Random;
 import java.util.Scanner;
+
 
 /**
 This is just a beginning.
@@ -10,6 +12,14 @@ This is just a beginning.
  // Begin awesome program
  
 public class StarshipCaptain {
+	
+	/**
+	 * Create a seeded random number generator 
+	 * (remove seed once testing is complete 
+	 * having a seed will provide predictable numbers while testing)
+	 */
+	
+	private static final Random randomNumbers = new Random();
 	
 	/**
 	 * This method displays a pause method and waits until the
@@ -24,19 +34,30 @@ public class StarshipCaptain {
 	 * Generate a random int that can be from 0 to
 	 * the number passed in as an argument.
 	 */
-	public int randomNumber(int maxNum) {
-		return (int) (Math.random() * (maxNum + 1));
+	public static int randomInt(int max) {
+		//return (int) (Math.random() * (maxNum + 1));
+		return ( randomNumbers.nextInt( max + 1) );
+	}
+	
+	/**
+	 * Generate a random int that can be from min to max
+	 * @param min
+	 * @param max
+	 * @return
+	 */
+	public static int randomInt(int min, int max) {
+		return ( min + randomNumbers.nextInt( max - min + 1 ) );
 	}
 	
 	/**
 	 * Simulates a round between the player and the npc, where
 	 * the NPC is attacking first.
 	 */
-	public void playRound(int roundNum, NPC npc, Player player) {
+	public void playRound(int roundNum, Ship npc, Ship player) {
 		System.out.println("[[ ROUND " + roundNum + " ]]");
 
-		int randomNpcATK = randomNumber(npc.atk);
-		int randomPlayerATK = randomNumber(player.atk);
+		int randomNpcATK = randomInt(npc.atk);
+		int randomPlayerATK = randomInt(player.atk);
 		
 		// NPC attacks
 		System.out.println(npc.name + " attacks for " + randomNpcATK + " points!");
@@ -66,15 +87,16 @@ public class StarshipCaptain {
 		Scanner input = new Scanner(System.in);
 		
 		// NPC creation.
-		NPC npc1 = new NPC("Enemy Light Frigate", 25, 8, 4);
-		NPC npc2 = new NPC("Enemy Destroyer", 30, 10, 6);
-		NPC npc3 = new NPC("Enemy Cruiser", 35, 12, 8);
-		
+		Ship npc1 = new Ship("Enemy Light Frigate", 25, 8, 4, 10);
+		Ship npc2 = new Ship("Enemy Destroyer", 30, 10, 6, 12);
+		Ship npc3 = new Ship("Enemy Cruiser", 35, 12, 8, 14);
+		Ship npc4 = new Ship();
+	
 		// Ask user for player name.
 		String playerName;
 		System.out.print("Enter your character's name: ");
 		playerName = input.next();
-		
+/**		
 		// Ask user for player health.
 		int playerHealth;
 		System.out.print("Enter your ship's starting health points (1-100): ");
@@ -85,10 +107,15 @@ public class StarshipCaptain {
 		System.out.print("Enter your ship's attack points (1-100): ");
 		playerAttack = input.nextInt();
 		
+		// Ask user for player defense.
+		System.out.print("Enter your ship's defense points (1-100): ");
+		int playerDefense = input.nextInt();
+		
 		// Create a Player object
-		Player player = new Player(playerName, playerHealth, playerAttack);
-
-
+		Ship player = new Ship(playerName, playerHealth, playerAttack, playerDefense);
+**/
+		Ship player = new Ship(playerName, randomInt(30, 50), randomInt(30, 50), randomInt(30, 50), randomInt(30, 50));
+		
 		System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 		System.out.println("Welcome " + player.name + "!");
 		m.pause(scanner);
@@ -123,22 +150,46 @@ public class StarshipCaptain {
 		int round = 1;
 		while (round <= 20 && player.hp > 0 && npc1.hp > 0)
 		{
-		m.playRound(round++, npc1, player);
-		m.pause(scanner);
+			//m.playRound(round++, npc1, player);
+			switch (StarshipCaptain.randomInt(2)){
+			case 0:
+				npc1.attack(player);
+				break;
+			case 1:
+				npc1.raiseShields();
+				break;
+			case 2:
+				npc1.maneuver(StarshipCaptain.randomInt(-25,25), StarshipCaptain.randomInt(-25,25), StarshipCaptain.randomInt(-25,25));
+				break;
+			}
+			System.out.println("< attack, shield, evade >");
+			switch (scanner.next()){
+			case "attack":
+				player.attack(npc1);
+				break;
+			case "shield":
+				player.raiseShields();
+				break;
+			case "evade":
+				player.evasiveManeuvers();
+				break;
+			}
+			
+			m.pause(scanner);
 		}
 		// Second NPC
 		int secondRound = 1;
 		while (secondRound <= 20 && player.hp > 0 && npc2.hp > 0)
 		{
-		m.playRound(secondRound++, npc2, player);
-		m.pause(scanner);
+			m.playRound(secondRound++, npc2, player);
+			m.pause(scanner);
 		}
 		// Third NPC
 		int thirdRound = 1;
 		while (thirdRound <= 20 && player.hp > 0 && npc3.hp > 0)
 		{
-		m.playRound(thirdRound++, npc3, player);
-		m.pause(scanner);
+			m.playRound(thirdRound++, npc3, player);
+			m.pause(scanner);
 		}
 
 		// That's all she wrote, for now.
@@ -149,6 +200,14 @@ public class StarshipCaptain {
 			System.out.println("Your ship, and all hands, are lost to the vastness of space.");
 		}
 		System.out.println("Game Over");
+		
+		// Scanners closed
+		if (scanner != null) {
+			scanner.close();
+		}
+		if (input != null) {
+			input.close();
+		}
 		
 	}
 

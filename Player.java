@@ -8,6 +8,6 @@ public class Player {
 		this.name = name;
 		hp = p2;
 		atk = p3;
-		
-}
+	}
+	
 }
