@@ -2,8 +2,8 @@
  * Generic Ship Class
  * used to create NPCs and Players
  * @author hookerjs
+ *
  */
-
 public class Ship {
 	
 	String name;	// duh
@@ -52,49 +52,23 @@ public class Ship {
 		shd = p5;
 		
 		this.attack = this.evade = this.shield = false;
-		
-		// random location
-		this.x = StarshipCaptain.randomInt(-25, 25);
-		this.y = StarshipCaptain.randomInt(-25, 25);
-		this.z = StarshipCaptain.randomInt(-25, 25);
 	}
 	
-	// for debugging
-	public void reportStatus(){
-		System.out.printf("name\tatk\thp\tdef\tshd\t\tattack\tevade\tshield\tx\ty\tz");
-		System.out.printf("%s\t%d\t%d\t%d\t%d\t%s\t%s\t%s\t%d\t%d\t%d\t", this.name, this.atk, this.hp, this.def, this.shd, this.attack?"true":"false", this.evade?"true":"false", this.shield?"true":"false", this.x, this.y, this.z );
-	}
-	
-	/**
-	 * 
-	 * @param target
-	 * @return
-	 */
 	public boolean attack(Ship target){
 		int range = this.checkRange(target);
 		int atk = StarshipCaptain.randomInt(this.atk);
 		
 		this.attack = true;
-		/** 
-		 * too far
-		 * to-do add return for different input
-		 */
-		System.out.printf("%s targets %s.\n", this.name, target.name );
-		if ( !target.isAlive() ){
-			System.out.printf("%s is already destroyed.", target.name);
-			return false;
-		}
+		this.atk += 5;
+		
 		if ( range > 25 ){
 			System.out.println(target.name + " is too far for " + this.name + " to attack");
-			return false;  // return to input loop for different input
+			return false;
 		}
-		else { // in range lower shields and slow for attack
-			this.removeStatus();
-			this.atk += 5;
-			this.attack = true;
+		else {
+			this.lowerShields();
+			this.maneuver();
 		}
-		
-		
 		if (atk < target.def  && range > 5) {
 			System.out.println("\t" + target.name + " dodges the attack!");
 			return true;
@@ -134,79 +108,51 @@ public class Ship {
 			return true;
 	}
 
-	/*
-	public void chargeAttack(){
-		removeStatus();
-	}
-	*/
 	
-	public boolean evasiveManeuvers(int x, int y, int z){
+	public void chargeAttack(){
+		this.atk -=5;
+		this.attack = false;
+	}
+	
+	public void evasiveManeuvers(){
+
 		this.def += 5;
+		this.lowerShields();
+		this.chargeAttack();
+		this.evade = true;
+	}
+	
+	public void maneuver(){
+		this.def -= 5;
+		this.evade = false;
+	}
+	public void maneuver(int x, int y, int z){
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.evade = true;
-		System.out.printf("%s moved to <%d, %d, %d>\n",this.name, x ,y ,z);
-		return true;
+		System.out.printf("moved to (%d, %d, %d)\n",x ,y ,z);
+		this.maneuver();
 	}
-	
-	public void removeStatus(){
-		if (this.attack){
-			this.atk -= 5;
-			this.attack = false;
-		}
-		if (this.shield){
-			this.shield = false;
-		}
-		if (this.evade){
-			this.def -= 5;
-			this.evade = false;
-		}	
-	}
-	
-	/*
-	public void maneuver(){
-		removeStatus();
-	}
-	*/
 	
 	public boolean raiseShields(){
-		int shields = this.shd;
-		String name = this.name;
-		
-		if (shields <= 0){
-			System.out.printf("%s has no shields to raise but tries anyway.\n", name);
-			return false;  // to-do make it return or ask for different action
+		if (this.shd <= 0){
+			System.out.printf("%s has no shields to raise but tries anyway.\n", this.name);
+			return false;
 		}
 		else{
-			System.out.printf("%s has raised shields. %d remaining.\n", name, shields);
-
+			this.maneuver();
+			this.chargeAttack();
 			this.shield = true;	
 			return true;
 		}
 	}
 	
-	/*
 	public void lowerShields(){
 		this.shield = false;
 	}
-	*/
 
-	/**
-	 * Return range to target 
-	 * http://en.wikipedia.org/wiki/Euclidean_vector#Length
-	 * @param target
-	 * @return
-	 */
 	public int checkRange(Ship target){
 		int out = (int) Math.sqrt(Math.pow( (this.x - target.x) , 2 ) + Math.pow( (this.y - target.y) , 2 ) + Math.pow( (this.z - target.z) , 2 ));
 		return out;
-	}
-	
-	public boolean isAlive() {  // its alive!! horrible semantics
-		if ( this.hp > 0 )
-			return true;
-		else
-			return false;
 	}
 }
