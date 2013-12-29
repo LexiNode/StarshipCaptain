@@ -64,7 +64,7 @@ public class StarshipCaptain {
 					case 8:
 						npc.evasiveManeuvers( randomInt(-25,25), randomInt(-25,25), randomInt(-25,25) );
 						break;
-					default:	// npc bias towards attacking player is 6/8
+					default:	// npc bias towards attacking player is 7/9
 						if ( !npc.attack(player) )	// if attack check fails then move closer instead
 							npc.evasiveManeuvers( player.x + randomInt(-5,5), player.y + randomInt(-5,5), player.z + randomInt(-5,5) );
 						break;
@@ -95,7 +95,7 @@ public class StarshipCaptain {
 			inputAccepted = false;
 			do {
 				//player.reportStatus();
-				System.out.println("< attack, shield, evade >");
+				System.out.println("< attack, shield, charge, evade >");
 				switch ( input.next() ){
 				case "attack":
 					System.out.print("< ");
@@ -112,6 +112,10 @@ public class StarshipCaptain {
 					if (player.raiseShields() )
 						inputAccepted = true;
 					break;
+				case "charge":
+					if (player.chargeShields())
+						inputAccepted = true;
+					break;
 				case "evade":  // accept input for specific location
 					System.out.println("< x y z >");
 					int[] loc = new int[3];
@@ -123,7 +127,6 @@ public class StarshipCaptain {
 					break;
 				default:
 					System.out.println("Input not accepted");
-					inputAccepted = false;
 					break;
 				}
 			} while ( !inputAccepted );
@@ -227,13 +230,11 @@ public class StarshipCaptain {
 		/**
 		 * Cycles through Page array printing out pages and pausing
 		 */
-		
-		
 		for ( String page : pageText ){
 			System.out.print(page);
 			m.pause(scanner);
 		}
-			
+		
 		m.encounter(player, npcs);
 		
 		player.reportStatus();
