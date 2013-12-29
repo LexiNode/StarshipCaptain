@@ -11,7 +11,10 @@ public class Ship {
 	int atk;	// attack points
 	int hp;		// hit points
 	int def;	// defense points
-	int shd;	// shield points
+	
+	int shdMax;	// max shield points
+	int shd;	// current shield points
+	int shdChgRt;	// shield charge rate;
 	
 	//int seq;	// sequence points
 	
@@ -19,6 +22,7 @@ public class Ship {
 	boolean attack;
 	boolean evade;
 	boolean shield;
+	boolean charge;
 
 	//location
 	int x,y,z;
@@ -35,6 +39,8 @@ public class Ship {
 		this.atk = StarshipCaptain.randomInt(8, 12);
 		this.def = StarshipCaptain.randomInt(4, 8);
 		this.shd = StarshipCaptain.randomInt(10, 20);
+		this.shdMax = this.shd;
+		this.shdChgRt = this.shdMax / 10;
 		
 		this.attack = this.evade = this.shield = false;
 		
@@ -50,6 +56,8 @@ public class Ship {
 		atk = p3;
 		def = p4;
 		shd = p5;
+		shdMax = shd;
+		this.shdChgRt = this.shdMax / 10;
 		
 		this.attack = this.evade = this.shield = false;
 		
@@ -75,7 +83,6 @@ public class Ship {
 		int range = this.checkRange(target);
 		int atk = StarshipCaptain.randomInt(this.atk);
 		
-		this.attack = true;
 		/** 
 		 * too far
 		 * to-do add return for different input
@@ -111,11 +118,12 @@ public class Ship {
 		if (target.shield == true){
 			
 			if (atk < target.shd){
-				System.out.printf("Shields absorb %d points leaving %d points left.\n", atk, target.shd -= atk);
+				target.shd -= atk;
+				System.out.printf("Shields hit! Shields at %d percent.\n", target.shieldPercent());
 				return true;
 			}
 			else if (atk >= target.shd){
-				System.out.printf("Remaining %d points of shielding destroyed. ", target.shd);
+				System.out.println("Shields destroyed!");
 				atk -= target.shd;
 				target.shd = 0;
 				target.shield = false;
@@ -136,6 +144,7 @@ public class Ship {
 	}
 
 	public boolean evasiveManeuvers(int x, int y, int z){
+		this.removeStatus();
 		this.def += 5;
 		this.x = x;
 		this.y = y;
@@ -156,23 +165,36 @@ public class Ship {
 		if (this.evade){
 			this.def -= 5;
 			this.evade = false;
-		}	
+		}
+		if (this.charge){
+			this.charge = false;
+		}
 	}
 	
-	public boolean raiseShields(){
-		int shields = this.shd;
-		String name = this.name;
-		
-		if (shields <= 0){
-			System.out.printf("%s has no shields to raise but tries anyway.\n", name);
+	public boolean raiseShields(){		
+		if (this.shd <= 0){
+			System.out.printf("%s has no shields to raise but tries anyway.\n", this.name);
 			return false;  // to-do make it return or ask for different action
 		}
 		else{
-			System.out.printf("%s has raised shields. %d remaining.\n", name, shields);
-
+			System.out.printf("%s has raised shields. %d percent remaining.\n", name, this.shieldPercent());
+			this.removeStatus();
 			this.shield = true;	
 			return true;
 		}
+	}
+	
+	public int shieldPercent(){
+		return (int)( 100 * ( (double)this.shd / (double)this.shdMax) );
+	}
+	
+	public boolean chargeShields(){
+		this.removeStatus();
+		this.charge = true;
+		if ( (this.shd += this.shdChgRt) > this.shdMax )
+			this.shd = this.shdMax;
+		System.out.printf("%s is charging shields. %d percent\n", this.name, this.shieldPercent());
+		return true;
 	}
 	
 	/**
