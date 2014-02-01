@@ -1,3 +1,9 @@
+package starshipCaptain;
+
+import java.util.Scanner;
+
+import Dice.*;
+
 /**
  * Generic Ship Class
  * used to create NPCs and Players
@@ -6,72 +12,216 @@
 
 public class Ship {
 	
-	String name;	// duh
+	private String name;	// duh
 	
-	int atk;	// attack points
-	int hp;		// hit points
-	int def;	// defense points
+	private int atk;	// attack points
+	private int hp;		// hit points
+	private int def;	// defense points
 	
-	int shdMax;	// max shield points
-	int shd;	// current shield points
-	int shdChgRt;	// shield charge rate;
+	private int shdMax;	// max shield points
+	private int shd;	// current shield points
+	private int shdChgRt;	// shield charge rate;
+	
+	//private int personel;
 	
 	//int seq;	// sequence points
 	
 	// Status indicators
-	boolean attack;
-	boolean evade;
-	boolean shield;
-	boolean charge;
+	private boolean attack;
+	private boolean evade;
+	private boolean shield;
+	private boolean charge;
 
 	//location
-	int x,y,z;
+	private int x,y,z;
 	
+	private Die die;
 
-	/**
-	 * Default constructor
-	 * produces random stats for ship
-	 */
 	public Ship(){
-		// TO-DO random name
-		this.name = "RandomShip";
-		this.hp = StarshipCaptain.randomInt(25, 35);
-		this.atk = StarshipCaptain.randomInt(8, 12);
-		this.def = StarshipCaptain.randomInt(4, 8);
-		this.shd = StarshipCaptain.randomInt(10, 20);
+		Scanner input = new Scanner(System.in);
+		
+		// Ask user for player name.
+		System.out.print("Enter your character's name: ");
+		this.name = input.next();
+		
+		// Ask user for player health.
+		System.out.print("Enter your ship's starting health points (1-100): ");
+		this.hp = input.nextInt();
+		
+		// Ask user for player attack.
+		System.out.print("Enter your ship's attack points (1-100): ");
+		this.atk = input.nextInt();
+		
+		// Ask user for player defense.
+		System.out.print("Enter your ship's defense points (1-100): ");
+		this.def = input.nextInt();
+		
+		// Ask user for player shield.
+		System.out.print("Enter your ship's shield points (1-100): ");
+		this.shd = input.nextInt();
+		
+		if (input != null) {
+			input.close();
+		}
+		
 		this.shdMax = this.shd;
 		this.shdChgRt = this.shdMax / 10;
 		
+		// default
 		this.attack = this.evade = this.shield = false;
 		
-		// random location
-		this.x = StarshipCaptain.randomInt(-25, 25);
-		this.y = StarshipCaptain.randomInt(-25, 25);
-		this.z = StarshipCaptain.randomInt(-25, 25);		
-	}
-
-	public Ship(String name, int p2, int p3, int p4, int p5) {
-		this.name = name;
-		hp = p2;
-		atk = p3;
-		def = p4;
-		shd = p5;
-		shdMax = shd;
-		this.shdChgRt = this.shdMax / 10;
+		this.x = 0;
+		this.y = 0;
+		this.z = 0;
 		
-		this.attack = this.evade = this.shield = false;
+		this.die = new Die();
 		
-		// random location
-		this.x = StarshipCaptain.randomInt(-25, 25);
-		this.y = StarshipCaptain.randomInt(-25, 25);
-		this.z = StarshipCaptain.randomInt(-25, 25);
 	}
 	
+	public Ship(String name, int hp, int atk, int def, int shd) {
+		this.name = name;
+		this.hp = hp;
+		this.atk = atk;
+		this.def = def;
+		this.shd = shd;
+		this.shdMax = this.shd;
+		this.shdChgRt = this.shdMax / 10;
+		
+		// default
+		this.attack = this.evade = this.shield = false;
+		
+		this.x = 0;
+		this.y = 0;
+		this.z = 0;
+		
+		this.die = new Die();
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getAtk() {
+		return atk;
+	}
+
+	public void setAtk(int atk) {
+		this.atk = atk;
+	}
+
+	public int getHp() {
+		return hp;
+	}
+
+	public void setHp(int hp) {
+		this.hp = hp;
+	}
+
+	public int getDef() {
+		return def;
+	}
+
+	public void setDef(int def) {
+		this.def = def;
+	}
+
+	public int getShdMax() {
+		return shdMax;
+	}
+
+	public void setShdMax(int shdMax) {
+		this.shdMax = shdMax;
+	}
+
+	public int getShd() {
+		return shd;
+	}
+
+	public void setShd(int shd) {
+		this.shd = shd;
+	}
+
+	public int getShdChgRt() {
+		return shdChgRt;
+	}
+
+	public void setShdChgRt(int shdChgRt) {
+		this.shdChgRt = shdChgRt;
+	}
+
+	public boolean isAttack() {
+		return attack;
+	}
+
+	public void setAttack(boolean attack) {
+		this.attack = attack;
+	}
+
+	public boolean isEvade() {
+		return evade;
+	}
+
+	public void setEvade(boolean evade) {
+		this.evade = evade;
+	}
+
+	public boolean isShield() {
+		return shield;
+	}
+
+	public void setShield(boolean shield) {
+		this.shield = shield;
+	}
+
+	public boolean isCharge() {
+		return charge;
+	}
+
+	public void setCharge(boolean charge) {
+		this.charge = charge;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public int getZ() {
+		return z;
+	}
+
+	public void setZ(int z) {
+		this.z = z;
+	}
+
+	public Die getDie() {
+		return die;
+	}
+
+	public void setDie(Die die) {
+		this.die = die;
+	}
+
 	// displays ship name and all stats for debugging
 	public void reportStatus(){
 		System.out.println(this.name);
 		System.out.printf("atk\thp\tdef\tshd\t\tattack\tevade\tshield\tx\ty\tz\n");
-		System.out.printf("%d\t%d\t%d\t%d\t%s\t%s\t%s\t%d\t%d\t%d\n", this.atk, this.hp, this.def, this.shd, this.attack?"true":"false", this.evade?"true":"false", this.shield?"true":"false", this.x, this.y, this.z );
+		System.out.printf("%d\t%d\t%d\t%d\t\t%s\t%s\t%s\t%d\t%d\t%d\n", this.atk, this.hp, this.def, this.shd, this.attack?"true":"false", this.evade?"true":"false", this.shield?"true":"false", this.x, this.y, this.z );
 	}
 	
 	/**
@@ -81,7 +231,7 @@ public class Ship {
 	 */
 	public boolean attack(Ship target){
 		int range = this.checkRange(target);
-		int atk = StarshipCaptain.randomInt(this.atk);
+		int atk = die.nextInt(0,this.atk);
 		
 		/** 
 		 * too far
