@@ -1,11 +1,19 @@
 package starshipCaptain;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.event.MouseInputListener;
 
 /**
 This is just a beginning.
@@ -16,7 +24,15 @@ This is just a beginning.
  
  // Begin awesome program
  
-public class StarshipCaptain {
+public class StarshipCaptain implements ActionListener, MouseInputListener {
+	
+	private JFrame mainFrame = new JFrame("Starship Captain");
+	private JPanel panel = new JPanel();
+	private JButton newBtn = new JButton("New Story");
+	private JButton selectBtn = new JButton("Select Story");
+	private JButton beginBtn = new JButton("Begin Story");
+	
+	private static final Dimension btnDim = new Dimension(100,25);
 	
 	public enum MainMenuOption {
         NEW("New story"), SELECT("seleCt story"), BEGIN("Begin story"), QUIT("Quit");
@@ -37,29 +53,39 @@ public class StarshipCaptain {
 		scanner.nextLine();
 	}
 	
-
-
-	public static void main(String[] args) {
-		/*
-		JFrame mainFrame = new JFrame("Starship Captain");
-		mainFrame.setSize(800, 600);
-		JButton newStory = new JButton("New Story");
-		JButton selectStory = new JButton("Select Story");
-		JButton beginStory = new JButton("Begin Story");
-		
-		mainFrame.add(newStory);
-		mainFrame.add(selectStory);
-		mainFrame.add(beginStory);
-		
-		newStory.setBounds(0, 0, 200, 50);
-		selectStory.setBounds(0, 50, 200, 50);
-		beginStory.setBounds(0, 100, 200, 50);
-
+	private void loadGUI(){
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.setPreferredSize(new Dimension(800,600));
+		arrangeGUI(mainFrame);
+		mainFrame.pack();
 		mainFrame.setVisible(true);
-		*/
+	}
+
+	private void arrangeGUI(JFrame frame){
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		newBtn.setPreferredSize(btnDim);
+		selectBtn.setPreferredSize(btnDim);
+		beginBtn.setPreferredSize(btnDim);
+		newBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		selectBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		beginBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panel.add(newBtn);
+		panel.add(selectBtn);
+		panel.add(beginBtn);
+		frame.add(panel);
+	}
+	public static void main(String[] args) {
 		
-		StarshipCaptain m = new StarshipCaptain();
-		m.run();
+		StarshipCaptain captain = new StarshipCaptain();
+		captain.loadGUI();
+		
+		
+		
+
+
+		
+		captain.run();
+
 	}
 	
 	public void run(){
@@ -147,6 +173,70 @@ public class StarshipCaptain {
 		if (input != null) {
 			input.close();
 		}	
+	}
+
+
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
