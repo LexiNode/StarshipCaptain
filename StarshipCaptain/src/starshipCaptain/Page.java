@@ -13,6 +13,8 @@ public class Page implements Serializable{
 	private String content;
 	private int pageNumber;
 	Choice[] choices = {};
+
+
 	Ship[] encounter = {};
 
 	// Default page
@@ -65,22 +67,11 @@ public class Page implements Serializable{
 	public int getPageNumber(){
 		return this.pageNumber;
 	}
-	
-	@Override
-	public String toString(){
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.title).append("\n\n").append(content).append("\n\n");
-		if (this.encounter.length > 0) {
-			
-		}
-		if ( this.choices.length > 0 ) {
-			for ( Choice choice : this.choices ) {
-				sb.append(choice.getCommand()).append(" > ").append(choice.getContent()).append(" - goto page ").append(choice.getTargetPage()).append("\n");
-			}
-		}
+	public Choice[] getChoices() {
+		return choices;
+	}
 
-		
-		sb.append("\t\t\t").append(this.pageNumber).append("\n");
-		return sb.toString();
+	public void setChoices(Choice[] choices) {
+		this.choices = choices;
 	}
 }

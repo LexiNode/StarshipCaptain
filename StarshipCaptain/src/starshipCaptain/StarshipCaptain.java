@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -13,7 +14,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.event.MouseInputListener;
 
 /**
 This is just a beginning.
@@ -24,13 +24,15 @@ This is just a beginning.
  
  // Begin awesome program
  
-public class StarshipCaptain implements ActionListener, MouseInputListener {
+public class StarshipCaptain implements ActionListener, MouseListener {
 	
 	private JFrame mainFrame = new JFrame("Starship Captain");
 	private JPanel panel = new JPanel();
 	private JButton newBtn = new JButton("New Story");
 	private JButton selectBtn = new JButton("Select Story");
 	private JButton beginBtn = new JButton("Begin Story");
+	
+
 	
 	private static final Dimension btnDim = new Dimension(100,25);
 	
@@ -42,6 +44,9 @@ public class StarshipCaptain implements ActionListener, MouseInputListener {
                 this.value = value;
         }
 	};
+	
+
+	
 	public boolean[] mainMenuOptionActive = {true, true, false, true};
 	
 	/**
@@ -69,6 +74,7 @@ public class StarshipCaptain implements ActionListener, MouseInputListener {
 		newBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 		selectBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 		beginBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		newBtn.addMouseListener(this);
 		panel.add(newBtn);
 		panel.add(selectBtn);
 		panel.add(beginBtn);
@@ -175,8 +181,17 @@ public class StarshipCaptain implements ActionListener, MouseInputListener {
 		}	
 	}
 
-
-
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if (e.getActionCommand().equals("Exit")) {
+			System.exit(0);
+		}
+		
+	}
+	
+	
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
@@ -214,29 +229,4 @@ public class StarshipCaptain implements ActionListener, MouseInputListener {
 		// TODO Auto-generated method stub
 		
 	}
-
-
-
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 }
